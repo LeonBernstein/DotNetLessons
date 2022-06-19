@@ -1,0 +1,31 @@
+#dotNetText {
+  animation: dotNetTextFromTop 1.25s ease-out;
+}
+
+@keyframes dotNetTextFromTop {
+  from {
+    bottom: 55px;
+  }
+}
+
+#lessonsText {
+  animation: lessonsTextFromRight 1.15s ease-in-out;
+  left: 0;
+}
+
+@keyframes lessonsTextFromRight {
+  from {
+    left: 45px;
+  }
+}
+
+#dotNetDot {
+  animation: dotNetDotAppear 1s ease-out 1s backwards;
+}
+
+@keyframes dotNetDotAppear {
+  from {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
