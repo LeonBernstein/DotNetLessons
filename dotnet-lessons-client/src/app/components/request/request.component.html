@@ -1,0 +1,58 @@
+<mat-accordion multi="true">
+  <ng-template ngFor
+               let-requestConfig
+               [ngForOf]="requestConfigs"
+               let-i="index"
+               let-requestState>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ requestConfig.actionPath }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ requestConfig.actionDesc }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <mat-grid-list cols="4"
+                       rowHeight="50px">
+          <mat-grid-tile colspan="4">
+            <button mat-raised-button
+                    color="accent"
+                    style="flex: 1;"
+                    (click)="executeAction(requestConfig.actionPath, i)"
+                    [disabled]="requestStates[i].isRequestActive"> Execute
+              <mat-icon *ngIf="requestStates[i].isRequestActive">
+                <mat-spinner diameter="20">
+                </mat-spinner>
+              </mat-icon>
+            </button>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="requestStates[i].status">
+            <span>Status: {{ requestStates[i].status }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="requestStates[i].statusText">
+            <span>Status text: {{ requestStates[i].statusText }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="requestStates[i].requestTime"
+                         colspan="2">
+            <span>Request Time: {{ requestStates[i].requestTime }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="requestStates[i].body"
+                         colspan="4"
+                         rowspan="4">
+            <div style="flex-direction: column; flex: 1; max-height: 100%; height: 100%; display: flex;">
+              <div>Body: </div>
+              <div style="overflow: auto;">
+                <code style="white-space: break-spaces;">{{requestStates[i].body}}</code>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </ng-template>
+    </mat-expansion-panel>
+
+  </ng-template>
+
+
+</mat-accordion>

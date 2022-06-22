@@ -20,6 +20,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseCors(config => config.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");

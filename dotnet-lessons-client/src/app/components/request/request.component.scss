@@ -1,0 +1,10 @@
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  flex-grow: 1;
+  width: 50%;
+}
+
+.mat-expansion-panel-header-title {
+  max-width: 500px;
+  word-break: break-all;
+}

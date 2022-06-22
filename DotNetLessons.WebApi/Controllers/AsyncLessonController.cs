@@ -8,7 +8,7 @@ namespace DotNetLessons.WebApi.Controllers;
 [Route("api/[controller]/[action]")]
 public class AsyncLessonController : ControllerBase
 {
-    private const int NUM_OF_ITERATIONS = 500_000_000;
+    private const int NUM_OF_ITERATIONS = 1_000_000_000;
 
     [HttpGet]
     public IActionResult GetTheTimeOfLongRunningTask()
