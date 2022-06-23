@@ -1,7 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http'
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http'
 import { Component, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges } from '@angular/core'
-import { catchError, of, Subscription, timeInterval } from 'rxjs'
-import { msToTime } from 'src/app/helpers/msToTime'
+import { catchError, Observable, of, Subscription, timeInterval } from 'rxjs'
+import { HttpMethods } from 'src/app/enums/http-methods'
+import { msToTime } from 'src/app/helpers/ms-to-time'
 import { RequestConfig } from 'src/app/models/request-config.interface'
 import { RequestState } from 'src/app/models/request-state.interface'
 import { HttpService } from 'src/app/services/http.service'
@@ -32,25 +33,35 @@ export class RequestComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public executeAction(path: string, btnIndex: number): void {
+  public executeAction(requestConfig: RequestConfig, btnIndex: number): void {
     const requestState = this.requestStates[btnIndex]
     requestState.isRequestActive = true
-    const sub = this.httpService.initiateGetRequest$<any>(path)
+    const sub = this.resolveRequestObservable$(requestConfig)
       .pipe(
         catchError((e: HttpErrorResponse) => of(e)),
         timeInterval(),
       ).subscribe(responseWithTimeInterval => {
         const response = responseWithTimeInterval.value
         this.requestSubs.remove(sub)
-        const body = response instanceof HttpErrorResponse ? response.error : response.body
         requestState.status = response.status
         requestState.statusText = response.statusText
-        requestState.body = typeof (body) === `object` ? JSON.stringify(body, null, `\t`) : body
         requestState.isRequestActive = false
         requestState.requestTime = msToTime(responseWithTimeInterval.interval)
+        if (requestConfig.shouldParseResponseBody) {
+          const body = response instanceof HttpErrorResponse ? response.error : response.body
+          requestState.body = typeof (body) === `object` ? JSON.stringify(body, null, '  ') : body
+        } else {
+          requestState.body = null
+        }
       })
     this.requestSubs.add(sub)
   }
 
-
+  public resolveRequestObservable$<TResponse>(requestConfig: RequestConfig): Observable<HttpResponse<TResponse>> {
+    switch (requestConfig.httpMethod) {
+      case (HttpMethods.get): return this.httpService.initiateGetRequest$<any>(requestConfig.actionPath, requestConfig.paramsResolver?.())
+      case (HttpMethods.post): return this.httpService.initiatePostRequest$<any>(requestConfig.actionPath, requestConfig.requestBodyResolver?.())
+      case (HttpMethods.delete): return this.httpService.initiateDeleteRequest$<any>(requestConfig.actionPath, requestConfig.paramsResolver?.())
+    }
+  }
 }

@@ -20,7 +20,7 @@
             <button mat-raised-button
                     color="accent"
                     style="flex: 1;"
-                    (click)="executeAction(requestConfig.actionPath, i)"
+                    (click)="executeAction(requestConfig, i)"
                     [disabled]="requestStates[i].isRequestActive"> Execute
               <mat-icon *ngIf="requestStates[i].isRequestActive">
                 <mat-spinner diameter="20">
@@ -38,7 +38,7 @@
                          colspan="2">
             <span>Request Time: {{ requestStates[i].requestTime }}</span>
           </mat-grid-tile>
-          <mat-grid-tile *ngIf="requestStates[i].body"
+          <mat-grid-tile *ngIf="requestConfig.shouldParseResponseBody && requestStates[i].body"
                          colspan="4"
                          rowspan="4">
             <div style="flex-direction: column; flex: 1; max-height: 100%; height: 100%; display: flex;">
