@@ -1,4 +1,8 @@
+using DotNetLessons.WebApi.DbModel;
+using DotNetLessons.WebApi.Entities;
+using DotNetLessons.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
@@ -9,6 +13,13 @@ namespace DotNetLessons.WebApi.Controllers;
 public class AsyncLessonController : ControllerBase
 {
     private const int NUM_OF_ITERATIONS = 1_000_000_000;
+
+    private readonly IDbContextFactory<DotNetLessonsContext> _dotNetLessonsContextFactory;
+
+    public AsyncLessonController(IDbContextFactory<DotNetLessonsContext> dotNetLessonsContextFactory)
+    {
+        _dotNetLessonsContextFactory = dotNetLessonsContextFactory;
+    }
 
     [HttpGet]
     public IActionResult GetTheTimeOfLongRunningTask()
@@ -93,5 +104,118 @@ public class AsyncLessonController : ControllerBase
         };
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public IActionResult AddPersonSync([FromBody] PersonDto personDto)
+    {
+        Person person = new()
+        {
+            FirstName = personDto.FirstName,
+            LastName = personDto.LastName,
+            IsFromEarth = personDto.IsFromEarth,
+            AddressesNavigations = personDto.Addresses.Select(x => new Address()
+            {
+                GalaxyName = x.GalaxyName,
+                PlanetName = x.PlanetName,
+                HasConsmicRadiation = x.HasConsmicRadiation,
+            }).ToList(),
+        };
+
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        context.Persons.Add(person);
+        context.SaveChanges();
+
+        return NoContent();
+    }
+
+    [HttpGet]
+    public IActionResult GetAllSync()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        List<Person> persons = context.Persons
+            .Include(x => x.AddressesNavigations)
+            .ToList();
+
+        if (persons.Count == 0) return NoContent();
+        return Ok(persons);
+    }
+
+    [HttpGet]
+    public IActionResult GetAllSyncAndLazy()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        List<Person> persons = context.Persons.ToList();
+
+        persons.ForEach(x =>
+        {
+            x.AddressesNavigations.ToList().ForEach(_ => { });
+        });
+
+        if (persons.Count == 0) return NoContent();
+        return Ok(persons);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddPersonAsync([FromBody] PersonDto personDto)
+    {
+        Person person = new()
+        {
+            FirstName = personDto.FirstName,
+            LastName = personDto.LastName,
+            IsFromEarth = personDto.IsFromEarth,
+            AddressesNavigations = personDto.Addresses.Select(x => new Address()
+            {
+                GalaxyName = x.GalaxyName,
+                PlanetName = x.PlanetName,
+                HasConsmicRadiation = x.HasConsmicRadiation,
+            }).ToList(),
+        };
+
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        context.Persons.Add(person);
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    public IActionResult DeletePersonSync()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        var person = context.Persons.FirstOrDefault();
+        if (person is not null)
+        {
+            context.Remove(person);
+            context.SaveChanges();
+        }
+
+        return NoContent();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        List<Person> persons = await context.Persons
+            .Include(x => x.AddressesNavigations)
+            .ToListAsync();
+
+        if (persons.Count == 0) return NoContent();
+        return Ok(persons);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeletePersonAsync()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        var person = await context.Persons.FirstOrDefaultAsync();
+        if (person is not null)
+        {
+            context.Remove(person);
+            await context.SaveChangesAsync();
+        }
+
+        return NoContent();
     }
 }

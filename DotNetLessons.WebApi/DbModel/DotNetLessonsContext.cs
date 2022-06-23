@@ -27,7 +27,7 @@ public class DotNetLessonsContext : DbContext
         {
             entityBuilder.HasKey(e => e.PersonId);
 
-            entityBuilder.HasMany(e => e.AddressesNavigation)
+            entityBuilder.HasMany(e => e.AddressesNavigations)
                 .WithOne(f => f.PersonNavigation)
                 .HasForeignKey(f => f.PersonId);
         });

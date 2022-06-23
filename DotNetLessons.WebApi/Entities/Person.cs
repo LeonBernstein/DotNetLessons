@@ -5,7 +5,7 @@ public class Person
 {
     public Person()
     {
-        AddressesNavigation = new HashSet<Address>();
+        AddressesNavigations = new HashSet<Address>();
     }
 
     public int PersonId { get; set; }
@@ -13,5 +13,5 @@ public class Person
     public string LastName { get; set; } = null!;
     public bool IsFromEarth { get; set; }
 
-    public virtual ICollection<Address> AddressesNavigation { get; set; }
+    public virtual ICollection<Address> AddressesNavigations { get; set; }
 }
