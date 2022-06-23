@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetLessons.WebApi.Migrations
 {
     [DbContext(typeof(DotNetLessonsContext))]
-    [Migration("20220623092918_InitialCreate")]
+    [Migration("20220623103101_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,12 +40,15 @@ namespace DotNetLessons.WebApi.Migrations
 
                     b.HasKey("AddressId");
 
+                    b.HasIndex("PersonId");
+
                     b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("DotNetLessons.WebApi.Entities.Person", b =>
                 {
                     b.Property<int>("PersonId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
@@ -64,20 +67,20 @@ namespace DotNetLessons.WebApi.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("DotNetLessons.WebApi.Entities.Person", b =>
+            modelBuilder.Entity("DotNetLessons.WebApi.Entities.Address", b =>
                 {
-                    b.HasOne("DotNetLessons.WebApi.Entities.Address", "AddressNavigation")
-                        .WithMany("PersonsNavigation")
+                    b.HasOne("DotNetLessons.WebApi.Entities.Person", "PersonNavigation")
+                        .WithMany("AddressesNavigation")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AddressNavigation");
+                    b.Navigation("PersonNavigation");
                 });
 
-            modelBuilder.Entity("DotNetLessons.WebApi.Entities.Address", b =>
+            modelBuilder.Entity("DotNetLessons.WebApi.Entities.Person", b =>
                 {
-                    b.Navigation("PersonsNavigation");
+                    b.Navigation("AddressesNavigation");
                 });
 #pragma warning restore 612, 618
         }

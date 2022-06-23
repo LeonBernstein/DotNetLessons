@@ -26,15 +26,15 @@ public class DotNetLessonsContext : DbContext
         modelBuilder.Entity<Person>(entityBuilder =>
         {
             entityBuilder.HasKey(e => e.PersonId);
+
+            entityBuilder.HasMany(e => e.AddressesNavigation)
+                .WithOne(f => f.PersonNavigation)
+                .HasForeignKey(f => f.PersonId);
         });
 
         modelBuilder.Entity<Address>(entityBuilder =>
         {
             entityBuilder.HasKey(e => e.AddressId);
-
-            entityBuilder.HasMany(e => e.PersonsNavigation)
-                .WithOne(f => f.AddressNavigation)
-                .HasForeignKey(e => e.PersonId);
         });
     }
 }
