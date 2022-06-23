@@ -57,7 +57,6 @@ public class AsyncLessonController : ControllerBase
                 {
                     result += rnd.Next(-5, 6);
                 }
-
                 taskSource.SetResult(result);
             };
         }
@@ -75,7 +74,6 @@ public class AsyncLessonController : ControllerBase
 
                 return taskSource.Task;
             });
-
 
         Task.WhenAll(tasks).Wait();
 

@@ -1,6 +1,14 @@
 using DotNetLessons.WebApi.DbModel;
 using Microsoft.EntityFrameworkCore;
 
+ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
+ThreadPool.SetMaxThreads(Environment.ProcessorCount, completionPortThreads);
+ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
+
+ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
+ThreadPool.SetMaxThreads(Environment.ProcessorCount, minCompletionPortThreads);
+ThreadPool.GetMaxThreads(out minWorkerThreads, out minCompletionPortThreads);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
