@@ -32,7 +32,7 @@ namespace DotNetLessons.WebApi.Migrations
                     PersonId = table.Column<int>(type: "INTEGER", nullable: false),
                     GalaxyName = table.Column<string>(type: "TEXT", nullable: false),
                     PlanetName = table.Column<string>(type: "TEXT", nullable: false),
-                    HasConsmicRadiation = table.Column<bool>(type: "INTEGER", nullable: false)
+                    HasCosmicRadiation = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

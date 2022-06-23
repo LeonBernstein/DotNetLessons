@@ -7,7 +7,7 @@ public partial class Address
     public int PersonId { get; set; }
     public string GalaxyName { get; set; } = null!;
     public string PlanetName { get; set; } = null!;
-    public bool HasConsmicRadiation { get; set; }
+    public bool HasCosmicRadiation { get; set; }
 
     public virtual Person PersonNavigation { get; set; } = null!;
 }

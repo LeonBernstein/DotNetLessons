@@ -18,7 +18,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DotNetLessonsContext>();
 builder.Services.AddDbContextFactory<DotNetLessonsContext>();
 
 var app = builder.Build();

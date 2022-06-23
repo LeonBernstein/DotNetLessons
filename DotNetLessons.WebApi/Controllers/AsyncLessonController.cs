@@ -118,7 +118,7 @@ public class AsyncLessonController : ControllerBase
             {
                 GalaxyName = x.GalaxyName,
                 PlanetName = x.PlanetName,
-                HasConsmicRadiation = x.HasConsmicRadiation,
+                HasCosmicRadiation = x.HasCosmicRadiation,
             }).ToList(),
         };
 
@@ -168,7 +168,7 @@ public class AsyncLessonController : ControllerBase
             {
                 GalaxyName = x.GalaxyName,
                 PlanetName = x.PlanetName,
-                HasConsmicRadiation = x.HasConsmicRadiation,
+                HasCosmicRadiation = x.HasCosmicRadiation,
             }).ToList(),
         };
 

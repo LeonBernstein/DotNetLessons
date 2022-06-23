@@ -26,7 +26,7 @@ namespace DotNetLessons.WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("HasConsmicRadiation")
+                    b.Property<bool>("HasCosmicRadiation")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PersonId")
@@ -68,7 +68,7 @@ namespace DotNetLessons.WebApi.Migrations
             modelBuilder.Entity("DotNetLessons.WebApi.Entities.Address", b =>
                 {
                     b.HasOne("DotNetLessons.WebApi.Entities.Person", "PersonNavigation")
-                        .WithMany("AddressesNavigation")
+                        .WithMany("AddressesNavigations")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -78,7 +78,7 @@ namespace DotNetLessons.WebApi.Migrations
 
             modelBuilder.Entity("DotNetLessons.WebApi.Entities.Person", b =>
                 {
-                    b.Navigation("AddressesNavigation");
+                    b.Navigation("AddressesNavigations");
                 });
 #pragma warning restore 612, 618
         }
