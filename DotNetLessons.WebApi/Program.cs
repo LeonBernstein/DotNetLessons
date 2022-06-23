@@ -1,5 +1,7 @@
 using DotNetLessons.WebApi.DbModel;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
 ThreadPool.SetMaxThreads(Environment.ProcessorCount, completionPortThreads);
@@ -13,7 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

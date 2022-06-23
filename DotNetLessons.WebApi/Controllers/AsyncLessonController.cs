@@ -156,6 +156,20 @@ public class AsyncLessonController : ControllerBase
         return Ok(persons);
     }
 
+    [HttpDelete]
+    public IActionResult DeletePersonSync()
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        var person = context.Persons.FirstOrDefault();
+        if (person is not null)
+        {
+            context.Remove(person);
+            context.SaveChanges();
+        }
+
+        return NoContent();
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddPersonAsync([FromBody] PersonDto personDto)
     {
@@ -175,20 +189,6 @@ public class AsyncLessonController : ControllerBase
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
         context.Persons.Add(person);
         await context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    [HttpDelete]
-    public IActionResult DeletePersonSync()
-    {
-        using var context = _dotNetLessonsContextFactory.CreateDbContext();
-        var person = context.Persons.FirstOrDefault();
-        if (person is not null)
-        {
-            context.Remove(person);
-            context.SaveChanges();
-        }
 
         return NoContent();
     }
