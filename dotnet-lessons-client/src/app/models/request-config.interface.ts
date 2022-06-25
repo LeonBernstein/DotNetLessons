@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http'
 import { HttpMethods } from '../enums/http-methods'
+import { LazyParamsResolvers } from '../enums/lazy-params-resolvers'
 
 export interface RequestConfig {
   actionPath: string,
@@ -9,5 +10,6 @@ export interface RequestConfig {
   paramsResolver?: () => HttpParams
   requestBodyResolver?: () => any
   isStressTestAllowed: boolean,
-  defaultStressTestCounter?: number,
+  defaultSimultaneousRequestsNumber?: number,
+  lazyParamsResolver?: LazyParamsResolvers
 }

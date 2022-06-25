@@ -13,7 +13,9 @@ export class HttpService {
   ) { }
 
   public initiateGetRequest$<TResponse>(path: string, params?: HttpParams): Observable<HttpResponse<TResponse>> {
-    return this.httpClient.get<TResponse>(environment.apiUrlPrefix + path, { params: params, observe: `response` })
+    let finalParams: { [param: string]: any } = { disableCache: Math.random() }
+    if (params) finalParams = Object.assign(params, finalParams)
+    return this.httpClient.get<TResponse>(environment.apiUrlPrefix + path, { params: finalParams, observe: `response` })
   }
 
   public initiatePostRequest$<TResponse>(path: string, body?: any): Observable<HttpResponse<TResponse>> {
@@ -22,5 +24,13 @@ export class HttpService {
 
   public initiateDeleteRequest$<TResponse>(path: string, params?: HttpParams): Observable<HttpResponse<TResponse>> {
     return this.httpClient.delete<TResponse>(environment.apiUrlPrefix + path, { params: params, observe: `response` })
+  }
+
+  public getPersonsIdsAsync(count: number): Promise<{ personId: number }[]> {
+    return new Promise(resolve => {
+      this.httpClient
+        .get<{ personId: number }[]>(environment.apiUrlPrefix + `api/AsyncLesson/GetPersonsIds`, { params: { count }, observe: `body` })
+        .subscribe(resolve)
+    })
   }
 }

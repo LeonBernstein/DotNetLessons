@@ -1,4 +1,6 @@
 import { HttpMethods } from '../enums/http-methods'
+import { LazyParamsResolvers } from '../enums/lazy-params-resolvers'
+import { splitPascalToWords } from '../helpers/split-pascal-to-words'
 import { RequestConfig } from '../models/request-config.interface'
 import { createRandomPerson } from './create-random-person'
 
@@ -21,7 +23,7 @@ export function getAsyncLessonRequestsData(): RequestConfig[] {
       isStressTestAllowed: true,
       httpMethod: HttpMethods.post,
       shouldParseResponseBody: false,
-      defaultStressTestCounter: 10,
+      defaultSimultaneousRequestsNumber: 10,
       requestBodyResolver: createRandomPerson
     },
     {
@@ -29,47 +31,46 @@ export function getAsyncLessonRequestsData(): RequestConfig[] {
       isStressTestAllowed: true,
       httpMethod: HttpMethods.get,
       shouldParseResponseBody: true,
-      defaultStressTestCounter: 1,
     },
     {
       actionPath: `GetAllSyncAndLazy`,
       isStressTestAllowed: true,
       httpMethod: HttpMethods.get,
       shouldParseResponseBody: true,
-      defaultStressTestCounter: 1,
     },
     {
       actionPath: `DeletePersonSync`,
       isStressTestAllowed: true,
       httpMethod: HttpMethods.delete,
       shouldParseResponseBody: false,
-      defaultStressTestCounter: 10,
+      defaultSimultaneousRequestsNumber: 10,
+      lazyParamsResolver: LazyParamsResolvers.personIds,
     },
     {
-      actionPath: `AddPersonAsync`,
+      actionPath: `AddPerson`,
       isStressTestAllowed: true,
       httpMethod: HttpMethods.post,
       shouldParseResponseBody: false,
-      defaultStressTestCounter: 1000,
+      defaultSimultaneousRequestsNumber: 1000,
       requestBodyResolver: createRandomPerson
     },
     {
-      actionPath: `GetAllAsync`,
+      actionPath: `GetAll`,
       isStressTestAllowed: true,
       httpMethod: HttpMethods.get,
       shouldParseResponseBody: true,
-      defaultStressTestCounter: 1,
     },
     {
-      actionPath: `DeletePersonAsync`,
+      actionPath: `DeletePerson`,
       isStressTestAllowed: true,
       httpMethod: HttpMethods.delete,
       shouldParseResponseBody: false,
-      defaultStressTestCounter: 1000,
+      defaultSimultaneousRequestsNumber: 1000,
+      lazyParamsResolver: LazyParamsResolvers.personIds,
     },
   ]
   return result.map(x => {
-    x.actionDesc = x.actionPath.replace(/([a-z])([A-Z])/g, '$1 $2')
+    x.actionDesc = splitPascalToWords(x.actionPath)
     x.actionPath = `api/AsyncLesson/` + x.actionPath
     return x
   })

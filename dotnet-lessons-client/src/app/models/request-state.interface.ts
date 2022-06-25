@@ -5,4 +5,6 @@ export interface RequestState {
   status?: number,
   statusText?: string
   requestTime?: string
+  numberSimultaneousRequests?: number
+  successCounterResult?: string
 }

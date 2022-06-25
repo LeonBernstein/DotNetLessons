@@ -1,5 +1,4 @@
 using DotNetLessons.WebApi.DbModel;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -8,8 +7,8 @@ ThreadPool.SetMaxThreads(Environment.ProcessorCount, completionPortThreads);
 ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
 
 ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
-ThreadPool.SetMaxThreads(Environment.ProcessorCount, minCompletionPortThreads);
-ThreadPool.GetMaxThreads(out minWorkerThreads, out minCompletionPortThreads);
+ThreadPool.SetMinThreads(Environment.ProcessorCount, minCompletionPortThreads);
+ThreadPool.GetMinThreads(out minWorkerThreads, out minCompletionPortThreads);
 
 var builder = WebApplication.CreateBuilder(args);
 

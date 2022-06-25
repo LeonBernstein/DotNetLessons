@@ -132,6 +132,8 @@ public class AsyncLessonController : ControllerBase
     [HttpGet]
     public IActionResult GetAllSync()
     {
+        Thread.Sleep(5000);
+
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
         List<Person> persons = context.Persons
             .Include(x => x.AddressesNavigations)
@@ -157,10 +159,10 @@ public class AsyncLessonController : ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult DeletePersonSync()
+    public IActionResult DeletePersonSync(int personId)
     {
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
-        var person = context.Persons.FirstOrDefault();
+        var person = context.Persons.FirstOrDefault(x => x.PersonId == personId);
         if (person is not null)
         {
             context.Remove(person);
@@ -171,7 +173,7 @@ public class AsyncLessonController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPersonAsync([FromBody] PersonDto personDto)
+    public async Task<IActionResult> AddPerson([FromBody] PersonDto personDto)
     {
         Person person = new()
         {
@@ -194,8 +196,10 @@ public class AsyncLessonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAll()
     {
+        await Task.Delay(5000);
+
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
         List<Person> persons = await context.Persons
             .Include(x => x.AddressesNavigations)
@@ -206,10 +210,11 @@ public class AsyncLessonController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeletePersonAsync()
+    public async Task<IActionResult> DeletePerson(int personId)
     {
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
-        var person = await context.Persons.FirstOrDefaultAsync();
+        var person = await context.Persons.FirstOrDefaultAsync(x => x.PersonId == personId);
+
         if (person is not null)
         {
             context.Remove(person);
@@ -217,5 +222,18 @@ public class AsyncLessonController : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPersonsIds(int count)
+    {
+        using var context = _dotNetLessonsContextFactory.CreateDbContext();
+        var persons = await context.Persons
+            .Take(count)
+            .Select(x => new { x.PersonId })
+            .ToListAsync();
+
+        if (persons.Count == 0) return NoContent();
+        return Ok(persons);
     }
 }
