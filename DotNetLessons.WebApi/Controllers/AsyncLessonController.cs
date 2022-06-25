@@ -132,9 +132,8 @@ public class AsyncLessonController : ControllerBase
     [HttpGet]
     public IActionResult GetAllSync()
     {
-        Thread.Sleep(5000);
-
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
+
         List<Person> persons = context.Persons
             .Include(x => x.AddressesNavigations)
             .ToList();
@@ -198,9 +197,8 @@ public class AsyncLessonController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        await Task.Delay(5000);
-
         using var context = _dotNetLessonsContextFactory.CreateDbContext();
+
         List<Person> persons = await context.Persons
             .Include(x => x.AddressesNavigations)
             .ToListAsync();

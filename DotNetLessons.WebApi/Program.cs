@@ -1,7 +1,9 @@
+using DotNetLessons.WebApi.DbInterceptors;
 using DotNetLessons.WebApi.DbModel;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
+#if DEBUG
 ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
 ThreadPool.SetMaxThreads(Environment.ProcessorCount, completionPortThreads);
 ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
@@ -9,6 +11,7 @@ ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
 ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
 ThreadPool.SetMinThreads(Environment.ProcessorCount, minCompletionPortThreads);
 ThreadPool.GetMinThreads(out minWorkerThreads, out minCompletionPortThreads);
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +26,12 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextFactory<DotNetLessonsContext>();
+builder.Services.AddDbContextFactory<DotNetLessonsContext>(options =>
+{
+    options.AddInterceptors(new DelayCommandInterceptor())
+        .UseLazyLoadingProxies()
+        .UseSqlServer(builder.Configuration.GetConnectionString("DotNetLessonsDb"));
+});
 
 var app = builder.Build();
 

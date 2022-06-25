@@ -1,7 +1,7 @@
 ﻿
 namespace DotNetLessons.WebApi.Entities;
 
-public class Person
+public partial class Person
 {
     public Person()
     {
