@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker/locale/en'
 import { Address } from '../models/address.interface'
 import { Person } from '../models/person.interface'
 
